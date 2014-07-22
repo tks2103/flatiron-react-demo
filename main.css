@@ -95,6 +95,14 @@ h2 {
            0 0 10px rgba(107, 199, 107, 0.8);
 }
 
+.todo-stats {
+  width: 70%;
+  margin: auto;
+  padding: 5px;
+  background-color: #eeeeee;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), 0 6px 0 -3px rgba(255, 255, 255, 0.8), 0 7px 1px -3px rgba(0, 0, 0, 0.3);
+}
+
 #todolist div .todo-item-complete:after {
   content: "\2713";
 }
