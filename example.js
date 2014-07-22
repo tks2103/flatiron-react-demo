@@ -4,127 +4,79 @@
 
 var ENTER_KEY = 13;
 
-var Todo = React.createClass({
-  handleDestroy: function() {
-    this.props.destroyTodo(this.props.todoText);
-  },
-
-  handleComplete: function() {
-    this.props.completeTodo(this.props.todoText);
-  },
-
+var TodoHeader = React.createClass({
   render: function() {
-    var classes = "todo-item";
-    if(this.props.completed === true) { classes += " todo-item-completed"; }
-
     return (
-      <div className={classes}>{this.props.todoText}
-        <button onClick={this.handleDestroy} className="todo-item-destroy"> </button>
-        <button onClick={this.handleComplete} className="todo-item-complete"> </button>
-      </div>
+      <h2>
+        My Todo List
+      </h2>
     );
   }
 });
 
-
-var TodoPrompt = React.createClass({
-  getInitialState: function() {
-    return {
-      value: ''
-    };
-  },
-
-  clearPrompt: function() {
-    this.setState({ value: '' });
-  },
+var TodoInput = React.createClass({
 
   handleKeyDown: function(event) {
     if(event.which === ENTER_KEY) {
-      this.props.createTodo(event.target.value);
-      this.clearPrompt();
+      this.props.addTodo(event.target.value);
     }
   },
 
-  handleChange: function(event) {
-    this.setState({ value: event.target.value });
-  },
 
   render: function() {
     return (
-      <input onKeyDown={this.handleKeyDown}
-             onChange={this.handleChange}
-             value={this.state.value}
-             className="todo-prompt"
-             placeholder="What need doing?"></input>
+      <input onKeyDown={this.handleKeyDown}>
+      </input>
     );
   }
 });
 
-
-var TodoStats = React.createClass({
+var TodoItem = React.createClass({
   render: function() {
-    var remainingTodos = this.props.totalTodos - this.props.completedTodos,
-        remainingText  = remainingTodos > 1 ? " items remaining" : " item remaining";
-
     return (
-      <div className="todo-stats">
-        {remainingTodos > 0 ? remainingTodos + remainingText : null}
-      </div>
+      <div>{this.props.todoText}</div>
     );
   }
 });
 
+var TodoItems = React.createClass({
+  render: function() {
+    return (
+      <div> this is a list item </div>
+    );
+  }
+});
 
-var TodoList = React.createClass({
-  getInitialState: function() {
+var TodoSummary = React.createClass({
+  render: function() {
+    return (
+      <div> This is the summary </div>
+    );
+  }
+});
+
+var App = React.createClass({
+
+  getInitialState: function () {
     return {
-      todos: [],
-      completedTodos: [],
-    };
+      todos: [ "Go to the Mall", "Go to the Movies" ]
+    }
   },
 
-  createTodo: function(todoText) {
+  addTodo: function(todoText) {
     this.setState({ todos: [todoText].concat(this.state.todos) });
   },
 
-  destroyTodo: function(todoText) {
-    this.state.todos.splice(this.state.todos.indexOf(todoText), 1);
-    if(this.state.completedTodos.indexOf(todoText) >= 0) {
-      this.state.completedTodos.splice(this.state.completedTodos.indexOf(todoText), 1);
-    }
-    this.setState({ todos: this.state.todos, completedTodos: this.state.completedTodos });
-  },
-
-  completeTodo: function(todoText) {
-    this.setState({ completedTodos: [todoText].concat(this.state.completedTodos) });
-  },
-
   render: function() {
-    var todos = this.state.todos.map(function(text) {
-      var isCompleted = this.state.completedTodos.indexOf(text) >= 0;
-      return <Todo destroyTodo={this.destroyTodo} completeTodo={this.completeTodo} todoText={text} completed={isCompleted}/>;
-    }.bind(this));
+    var todos = this.state.todos.map(function(todoText) {
+      return <TodoItem todoText={todoText}/>;
+    });
 
     return (
       <div>
-        <div className="todo-list">
-          <TodoPrompt createTodo={this.createTodo}/>
-          {todos}
-        </div>
-        <TodoStats completedTodos={this.state.completedTodos.length}
-                   totalTodos={this.state.todos.length} />
-      </div>
-    );
-  }
-});
-
-
-var App = React.createClass({
-  render: function() {
-    return (
-      <div>
-        <h2>My Todo App</h2>
-        <TodoList />
+        <TodoHeader />
+        <TodoInput addTodo={this.addTodo}/>
+        {todos}
       </div>
     );
   }
