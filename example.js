@@ -4,24 +4,33 @@
 
 var ENTER_KEY = 13;
 
-
-
 var Todo = React.createClass({
+  getInitialState: function() {
+    return {
+      completed: false
+    };
+  },
 
-  handleClick: function() {
+  handleDestroy: function() {
     this.props.destroyTodo(this.props.todoText);
   },
 
+  handleComplete: function() {
+    this.setState({ completed: true });
+  },
 
   render: function() {
+    var classes = "todo-item";
+    if(this.state.completed === true) { classes += " todo-item-completed"; }
+
     return (
-      <div className="todo-item">{this.props.todoText}
-        <button onClick={this.handleClick} className="todo-item-destroy"> </button>
+      <div className={classes}>{this.props.todoText}
+        <button onClick={this.handleDestroy} className="todo-item-destroy"> </button>
+        <button onClick={this.handleComplete} className="todo-item-complete"> </button>
       </div>
     );
   }
 });
-
 
 
 var TodoPrompt = React.createClass({
@@ -30,7 +39,6 @@ var TodoPrompt = React.createClass({
       this.props.createTodo(event.target.value);
     }
   },
-
 
   render: function() {
     return (
@@ -50,17 +58,14 @@ var TodoList = React.createClass({
     };
   },
 
-
   createTodo: function(todoText) {
     this.setState({ todos: [todoText].concat(this.state.todos) });
   },
-
 
   destroyTodo: function(todoText) {
     this.state.todos.splice(this.state.todos.indexOf(todoText), 1);
     this.setState({ todos: this.state.todos });
   },
-
 
   render: function() {
     var todos = this.state.todos.map(function(text) {
@@ -77,7 +82,6 @@ var TodoList = React.createClass({
 });
 
 
-
 var App = React.createClass({
   render: function() {
     return (
@@ -88,7 +92,6 @@ var App = React.createClass({
     );
   }
 });
-
 
 
 React.renderComponent(
